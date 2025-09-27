@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+
+/* styles/globals.css (or a similar location) */
+
+.icon-button {
+  @apply h-10 w-10 bg-gray-200 text-gray-800 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300 transition duration-150 ease-in-out;
 }
 
