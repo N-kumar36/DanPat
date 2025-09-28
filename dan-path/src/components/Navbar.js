@@ -45,7 +45,7 @@ const XIcon = (props) => (
 // Navigation links
 const socialNavigation = [
   { name: "Feed", href: "/", icon: HomeIcon },
-  
+
   { name: "Messages", href: "/messages", icon: MessageSquareIcon },
   { name: "Notifications", href: "/notifications", icon: BellIcon },
 ];
@@ -125,7 +125,11 @@ const Navbar = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden p-2 rounded hover:bg-gray-800"
         >
-          {isOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+          {isOpen ? (
+            <XIcon className="h-6 w-6" />
+          ) : (
+            <MenuIcon className="h-6 w-6" />
+          )}
         </button>
       </div>
 
@@ -146,6 +150,22 @@ const Navbar = () => {
             </div>
           </form>
 
+          {/* Mobile Profile */}
+          <Link
+            href="/profile"
+            className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-800"
+            onClick={() => setIsOpen(false)}
+          >
+            <Image
+              width={36}
+              height={36}
+              src="https://i.pravatar.cc/40"
+              alt="User"
+              className="rounded-full border-2 border-indigo-500 hover:scale-105 transition object-cover"
+            />
+            <span>Profile</span>
+          </Link>
+
           {socialNavigation.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -163,22 +183,6 @@ const Navbar = () => {
               </Link>
             );
           })}
-
-          {/* Mobile Profile */}
-          <Link
-            href="/profile"
-            className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-800"
-            onClick={() => setIsOpen(false)}
-          >
-            <Image
-              width={36}
-              height={36}
-              src="https://i.pravatar.cc/40"
-              alt="User"
-              className="rounded-full border-2 border-indigo-500 hover:scale-105 transition object-cover"
-            />
-            <span>Profile</span>
-          </Link>
         </div>
       )}
     </nav>

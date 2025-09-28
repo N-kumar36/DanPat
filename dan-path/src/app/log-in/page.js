@@ -40,7 +40,7 @@ const LogIn = () => {
           {/* Email Input Field */}
           <div>
             <label
-              htmlFor="email"
+              htmlFor="email"w
               className="block text-sm font-medium text-gray-300"
             >
               Email address
