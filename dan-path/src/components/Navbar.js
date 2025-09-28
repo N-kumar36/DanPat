@@ -1,127 +1,187 @@
-"use client"
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+"use client";
+import React, { useState } from "react";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Services', href: '/services' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'Contact', href: '/contact' },
+// --- Icons ---
+const HomeIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <polyline points="9 22 9 12 15 12 15 22" />
+  </svg>
+);
+const SearchIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+const MessageSquareIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+const BellIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+  </svg>
+);
+const MenuIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+const XIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+// Navigation links
+const socialNavigation = [
+  { name: "Feed", href: "/", icon: HomeIcon },
+  
+  { name: "Messages", href: "/messages", icon: MessageSquareIcon },
+  { name: "Notifications", href: "/notifications", icon: BellIcon },
 ];
+
+const NavItem = ({ item, currentPath }) => {
+  const isActive = currentPath === item.href;
+  return (
+    <Link
+      href={item.href}
+      className={`flex items-center justify-center p-2 rounded-full transition ${
+        isActive
+          ? "bg-indigo-600 text-white"
+          : "text-gray-300 hover:bg-gray-800 hover:text-white"
+      }`}
+    >
+      <item.icon className="h-6 w-6" />
+    </Link>
+  );
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const currentPath = usePathname();
+  const [searchQuery, setSearchQuery] = useState("");
+  const pathname = usePathname();
 
-  const isActive = (href) => {
-    // Check for exact match for Home
-    if (href === '/') {
-      return currentPath === '/';
-    }
-    // Check if path starts with link href for nested routes (e.g., /services/design)
-    return currentPath.startsWith(href);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Search:", searchQuery);
+    // Here you can integrate search functionality
   };
 
   return (
-    // Wrapper for sticky positioning and the background effect
-    //  FIX: Changed w-[100vw] to w-full for better compatibility
-    <div className="sticky top-0 z-40 w-full"> 
-      
-      {/* Background Div (Covers only the navbar area, providing the dark gradient) */}
-      <div className="absolute top-0 w-full h-full bg-neutral-950 
-                     bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] z-[-1]">
+    <nav className="sticky top-0 z-50 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] shadow-md text-white">
+      <div className="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
+        {/* Logo */}
+        <Link href="/" className="text-xl font-bold">
+          DAAN PATH
+        </Link>
+
+        {/* Desktop Search Bar */}
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex flex-1 mx-4 max-w-md"
+        >
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          </div>
+        </form>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-4">
+          {socialNavigation.map((item) => (
+            <NavItem key={item.name} item={item} currentPath={pathname} />
+          ))}
+
+          {/* User Profile Avatar */}
+          <Link href="/profile" className="ml-4">
+            <Image
+              width={36}
+              height={36}
+              src="https://i.pravatar.cc/40"
+              alt="User"
+              className="rounded-full border-2 border-indigo-500 hover:scale-105 transition object-cover"
+            />
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2 rounded hover:bg-gray-800"
+        >
+          {isOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+        </button>
       </div>
 
-      {/* Navbar Content: Dark, semi-transparent, frosted glass effect */}
-      <nav className="bg-neutral-900/70 backdrop-blur-sm shadow-xl relative z-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-
-            {/* 1. Logo Section (Text is white for contrast) */}
-            <div className="flex-shrink-0">
-              <Link href="/" className="text-2xl font-bold text-white hover:text-indigo-400 transition">
-                MyBrand
-              </Link>
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden px-2 pb-3 space-y-2">
+          {/* Mobile Search Bar */}
+          <form onSubmit={handleSearch} className="px-4 mb-2">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             </div>
+          </form>
 
-            {/* 2. Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {navigation.map((item) => {
-                  const isCurrent = isActive(item.href);
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`
-                        ${isCurrent ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-neutral-800 hover:text-white'}
-                        px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out
-                      `}
-                      aria-current={isCurrent ? 'page' : undefined}
-                    >
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 3. Action Button */}
-            <div className="hidden md:flex">
-              <Link href={"/log-in"} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out">
-                Get Started
-              </Link>
-            </div>
-
-            {/* 4. Mobile Menu Button (Icon is light gray/white for contrast) */}
-            <div className="-mr-2 flex md:hidden">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+          {socialNavigation.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center gap-2 px-4 py-2 rounded transition ${
+                  isActive
+                    ? "bg-indigo-600 text-white"
+                    : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                }`}
+                onClick={() => setIsOpen(false)}
               >
-                <span className="sr-only">Open main menu</span>
-                {isOpen ? (
-                  <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
-            </div>
+                <item.icon className="h-5 w-5" /> {item.name}
+              </Link>
+            );
+          })}
 
-          </div>
+          {/* Mobile Profile */}
+          <Link
+            href="/profile"
+            className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-800"
+            onClick={() => setIsOpen(false)}
+          >
+            <Image
+              width={36}
+              height={36}
+              src="https://i.pravatar.cc/40"
+              alt="User"
+              className="rounded-full border-2 border-indigo-500 hover:scale-105 transition object-cover"
+            />
+            <span>Profile</span>
+          </Link>
         </div>
-
-        {/* 5. Mobile Menu Panel */}
-        <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navigation.map((item) => {
-              const isCurrent = isActive(item.href);
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    ${isCurrent ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-neutral-800 hover:text-white'}
-                    block px-3 py-2 rounded-md text-base font-medium transition duration-150 ease-in-out
-                  `}
-                  aria-current={isCurrent ? 'page' : undefined}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-            {/* Mobile action button */}
-            <Link href={"/log-in"} className="w-full text-left mt-2 px-3 py-2 block text-base font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out">
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
-    </div>
+      )}
+    </nav>
   );
 };
 

@@ -105,7 +105,7 @@ const SignUp = () => {
               value={formData.name}
               onChange={handleChange}
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="John Doe"
+              placeholder="Name"
             />
           </div>
 
@@ -121,7 +121,7 @@ const SignUp = () => {
               value={formData.email}
               onChange={handleChange}
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="you@example.com"
+              placeholder="Email"
             />
           </div>
 
@@ -137,7 +137,7 @@ const SignUp = () => {
               value={formData.password}
               onChange={handleChange}
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="••••••••"
+              placeholder="Password"
             />
           </div>
 
@@ -153,7 +153,7 @@ const SignUp = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="••••••••"
+              placeholder="Confirm Password"
             />
             {passwordError && (
               <p className="mt-2 text-sm text-red-400">{passwordError}</p>

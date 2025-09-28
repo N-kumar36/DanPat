@@ -1,34 +1,34 @@
-"use client"
+"use client";
 // import Link from "next/link"; // Removed to fix the import error
 import React from "react";
 
 const LogIn = () => {
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Replaced alert with console log to adhere to best practices
     console.log("Sign-in attempt submitted! Data capture logic goes here.");
   };
-  
+
   // Helper function to handle links using standard <a> tags
   const NavLink = ({ href, children, className }) => (
-      <a href={href} className={className}>
-          {children}
-      </a>
+    <a href={href} className={className}>
+      {children}
+    </a>
   );
-
 
   return (
     // Outer Container: min-h-screen and flex centering ensures content is vertically centered on any screen size.
-    <div className="flex items-center justify-center min-h-screen w-full p-4 
+    <div
+      className="flex items-center justify-center min-h-screen w-full p-4 
                     bg-neutral-950 
-                    bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
-      
+                    bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+    >
       {/* Sign-In Card Container: w-full makes it fluid on mobile; max-w-md prevents excessive width on desktop. */}
-      <div className="w-full max-w-md p-8 space-y-6 
+      <div
+        className="w-full max-w-md p-8 space-y-6 
                     bg-white/5 backdrop-blur-md rounded-xl shadow-2xl 
-                    border border-white/10 text-white z-10">
-        
+                    border border-white/10 text-white z-10"
+      >
         <h2 className="text-3xl font-extrabold text-center text-white">
           Welcome Back
         </h2>
@@ -37,10 +37,12 @@ const LogIn = () => {
         </p>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          
           {/* Email Input Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-300"
+            >
               Email address
             </label>
             <input
@@ -50,13 +52,16 @@ const LogIn = () => {
               required
               // Input width is w-full to fill its parent container
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="you@example.com"
+              placeholder="Email"
             />
           </div>
 
           {/* Password Input Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-300"
+            >
               Password
             </label>
             <input
@@ -65,14 +70,17 @@ const LogIn = () => {
               type="password"
               required
               className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 text-white outline-none transition"
-              placeholder="••••••••"
+              placeholder="Password"
             />
           </div>
 
           {/* Forgot Password Link */}
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300 transition">
+              <a
+                href="#"
+                className="font-medium text-indigo-400 hover:text-indigo-300 transition"
+              >
                 Forgot your password?
               </a>
             </div>
@@ -91,8 +99,11 @@ const LogIn = () => {
 
         {/* Sign Up Prompt: Using NavLink component */}
         <div className="text-center text-sm text-gray-400">
-          Dont have an account?{' '}
-          <NavLink href="/sign-up" className="font-medium text-indigo-400 hover:text-indigo-300 transition">
+          Dont have an account?{" "}
+          <NavLink
+            href="/sign-up"
+            className="font-medium text-indigo-400 hover:text-indigo-300 transition"
+          >
             Sign up
           </NavLink>
         </div>
