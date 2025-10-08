@@ -36,59 +36,58 @@ const dummyMessages = [
     lastMessage: "Loved your recent story!",
     time: "2d ago",
   },
-  // Note: Entries kept as-is, assuming this is for scroll testing.
   {
     id: 5,
-    user: "Erica Foster", // Changed to have unique users for clarity
+    user: "Erica Foster",
     avatar: "https://i.pravatar.cc/40?u=e5",
     lastMessage: "Great job on the presentation!",
     time: "2d ago",
   },
   {
     id: 6,
-    user: "Frank Green", // Changed to have unique users for clarity
+    user: "Frank Green",
     avatar: "https://i.pravatar.cc/40?u=f6",
     lastMessage: "Don't forget the deadline.",
     time: "2d ago",
   },
   {
     id: 7,
-    user: "Grace Hill", // Changed to have unique users for clarity
+    user: "Grace Hill",
     avatar: "https://i.pravatar.cc/40?u=g7",
     lastMessage: "See you next week!",
     time: "3d ago",
   },
   {
     id: 8,
-    user: "Henry Jones", // Changed to have unique users for clarity
+    user: "Henry Jones",
     avatar: "https://i.pravatar.cc/40?u=h8",
     lastMessage: "Thanks for the help.",
     time: "3d ago",
   },
   {
     id: 9,
-    user: "Ivy King", // Changed to have unique users for clarity
+    user: "Ivy King",
     avatar: "https://i.pravatar.cc/40?u=i9",
     lastMessage: "I'll send the files shortly.",
     time: "3d ago",
   },
   {
     id: 10,
-    user: "Jack Lee", // Changed to have unique users for clarity
+    user: "Jack Lee",
     avatar: "https://i.pravatar.cc/40?u=j10",
     lastMessage: "Can you review this?",
     time: "4d ago",
   },
   {
     id: 11,
-    user: "Karen Miller", // Changed to have unique users for clarity
+    user: "Karen Miller",
     avatar: "https://i.pravatar.cc/40?u=k11",
     lastMessage: "Got it, thanks!",
     time: "4d ago",
   },
   {
     id: 12,
-    user: "Leo Nelson", // Changed to have unique users for clarity
+    user: "Leo Nelson",
     avatar: "https://i.pravatar.cc/40?u=l12",
     lastMessage: "Working on it now.",
     time: "4d ago",
@@ -99,66 +98,94 @@ const dummyMessages = [
 // 2. CHAT VIEW COMPONENT (Detail Panel)
 // =================================================================
 function ChatView({ userId }) {
-  // Find user details for the header
-  const user = dummyMessages.find(msg => msg.id == userId);
+  const user = dummyMessages.find((msg) => msg.id == userId);
 
   const [messages, setMessages] = useState([
     { from: "me", text: "Hello!" },
     { from: "user", text: "Hi, how are you?" },
   ]);
   const [newMessage, setNewMessage] = useState("");
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const messagesEndRef = useRef(null);
 
   const handleSend = () => {
-    if (!newMessage.trim()) return;
-    setMessages([...messages, { from: "me", text: newMessage }]);
+    if (!newMessage.trim() && !selectedMedia) return;
+
+    const newMsg = { from: "me" };
+    if (selectedMedia) {
+      newMsg.media = selectedMedia;
+      newMsg.type = selectedMedia.type.startsWith("video") ? "video" : "image";
+    } else {
+      newMsg.text = newMessage;
+    }
+
+    setMessages([...messages, newMsg]);
     setNewMessage("");
+    setSelectedMedia(null);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setSelectedMedia({ url: previewURL, type: file.type });
+    }
   };
 
   useEffect(() => {
-    // Scroll to bottom whenever messages update
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Use useEffect to reset state if the user changes
   useEffect(() => {
-    // Reset dummy messages when switching chat
     setMessages([
-        { from: "user", text: `${user ? user.user : 'User'} says: What's up?` },
-        { from: "me", text: "Just testing this new UI!" },
+      {
+        from: "user",
+        text: `${user ? user.user : "User"} says: What's up?`,
+      },
+      { from: "me", text: "Just testing this new UI!" },
     ]);
   }, [userId, user]);
-
 
   return (
     <div className="flex flex-col flex-1 border-l border-gray-800 h-full">
       {/* Header */}
       <header className="p-4 bg-neutral-900 border-b border-gray-800 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          {/* Back button for mobile view */}
-          <Link href="/messages" className="md:hidden text-indigo-400 hover:text-indigo-300">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-             </svg>
-          </Link>
-
-          <div className="relative">
-            {user && ( // Only render Image if user data is found
-              <Image
-                src={user.avatar}
-                alt={user.user}
-                width={50}
-                height={50}
-                className="rounded-full border-2 border-indigo-500 object-cover"
+          <Link
+            href="/messages"
+            className="md:hidden text-indigo-400 hover:text-indigo-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
               />
-            )}
-          </div>
-
-          <h1 className="text-xl font-bold">{user ? user.user : `Chat with User ${userId}`}</h1>
+            </svg>
+          </Link>
+          {user && (
+            <Image
+              src={user.avatar}
+              alt={user.user}
+              width={50}
+              height={50}
+              className="rounded-full border-2 border-indigo-500 object-cover"
+            />
+          )}
+          <h1 className="text-xl font-bold">
+            {user ? user.user : `Chat with User ${userId}`}
+          </h1>
         </div>
       </header>
 
-      {/* Messages Area - scrollbar-hide is already present here */}
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
         {messages.map((msg, idx) => (
           <div
@@ -169,29 +196,79 @@ function ChatView({ userId }) {
                 : "bg-gray-800 text-gray-200 mr-auto text-left"
             }`}
           >
-            {msg.text}
+            {msg.text && <p>{msg.text}</p>}
+            {msg.media && msg.type === "image" && (
+              <img
+                src={msg.media.url}
+                alt="sent image"
+                className="rounded-lg mt-2 max-h-64 object-cover"
+              />
+            )}
+            {msg.media && msg.type === "video" && (
+              <video
+                src={msg.media.url}
+                controls
+                className="rounded-lg mt-2 max-h-64 object-cover"
+              />
+            )}
           </div>
         ))}
-        {/* Scroll anchor */}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-gray-800 flex gap-2 bg-neutral-900 sticky bottom-0 z-10">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="flex-1 px-4 py-2 rounded-full bg-neutral-800 border border-gray-700 outline-none placeholder-gray-400 text-white"
-          placeholder="Type a message..."
-        />
-        <button
-          onClick={handleSend}
-          className="px-4 py-2 bg-indigo-600 rounded-full hover:bg-indigo-700 transition font-medium"
-        >
-          Send
-        </button>
+      <div className="p-4 border-t border-gray-800 flex flex-col gap-2 bg-neutral-900 sticky bottom-0 z-10">
+        {selectedMedia && (
+          <div className="flex items-center gap-3 bg-neutral-800 p-2 rounded-lg">
+            {selectedMedia.type.startsWith("image") ? (
+              <img
+                src={selectedMedia.url}
+                alt="preview"
+                className="h-16 w-16 rounded object-cover"
+              />
+            ) : (
+              <video
+                src={selectedMedia.url}
+                className="h-16 w-16 rounded object-cover"
+                controls
+              />
+            )}
+            <button
+              onClick={() => setSelectedMedia(null)}
+              className="text-red-400 hover:text-red-600"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <label className="flex items-center justify-center bg-neutral-800 border border-gray-700 text-gray-300 px-3 py-2 rounded-full cursor-pointer hover:bg-neutral-700 transition">
+            📎
+            <input
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </label>
+
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            className="flex-1 px-4 py-2 rounded-full bg-neutral-800 border border-gray-700 outline-none placeholder-gray-400 text-white"
+            placeholder="Type a message..."
+          />
+
+          <button
+            onClick={handleSend}
+            className="px-4 py-2 bg-indigo-600 rounded-full hover:bg-indigo-700 transition font-medium"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -202,55 +279,39 @@ function ChatView({ userId }) {
 // =================================================================
 export default function MessagesLayout() {
   const params = useParams();
-  // The 'id' will be in params.id as an array (e.g., ['1']). 
-  // We check if it exists and take the first element, converting it to a number.
   const selectedId = params?.id?.[0] ? parseInt(params.id[0]) : null;
 
   return (
-    // Outer container for centering and defining max width
     <div className="min-h-[91vh] bg-neutral-950 text-white flex justify-center p-4">
-      <div 
-        className="flex w-full max-w-7xl border border-neutral-800 rounded-xl shadow-2xl overflow-hidden" 
-        // Define a fixed height for the chat area on desktop
-        style={{ height: 'calc(100vh - 6rem)' }}
+      <div
+        className="flex w-full max-w-7xl border border-neutral-800 rounded-xl shadow-2xl overflow-hidden"
+        style={{ height: "calc(100vh - 6rem)" }}
       >
-
-        {/* ========================================================== */}
-        {/* MESSAGES LIST (Left Sidebar) */}
-        {/* ========================================================== */}
+        {/* Sidebar */}
         <div
-          // ⚠️ FIX 1: The outer div handles the overall height and scrolling.
-          // Keep: h-full, overflow-y-auto, scrollbar-hide
           className={`h-full overflow-y-auto scrollbar-hide w-full md:w-1/3 min-w-0 flex-shrink-0 ${
             selectedId ? "hidden md:block" : "block"
-          }`} // Hide list on mobile if a chat is selected
+          }`}
         >
           <div className="p-4">
             <h1 className="text-3xl font-bold mb-6">Messages</h1>
-            {/* 🏆 FIX 2: Remove scrolling classes from this inner div. 
-            The outer list container will handle the scroll for the content inside. */}
-            <div className="flex flex-col space-y-2"> 
+            <div className="flex flex-col space-y-2">
               {dummyMessages.map((msg) => (
-                <Link 
-                  key={msg.id} 
-                  // Route to /messages/[id]
-                  href={`/messages/${msg.id}`} 
-                  passHref
-                >
+                <Link key={msg.id} href={`/messages/${msg.id}`} passHref>
                   <div
                     className={`flex items-center gap-4 p-3 rounded-xl hover:bg-neutral-800 cursor-pointer transition ${
-                      selectedId == msg.id ? "bg-indigo-900/50 border border-indigo-500" : "bg-neutral-900"
+                      selectedId == msg.id
+                        ? "bg-indigo-900/50 border border-indigo-500"
+                        : "bg-neutral-900"
                     }`}
                   >
-                    <div className="relative">
-                      <Image
-                        src={msg.avatar}
-                        alt={msg.user}
-                        width={50}
-                        height={50}
-                        className="rounded-full border-2 border-indigo-500 object-cover"
-                      />
-                    </div>
+                    <Image
+                      src={msg.avatar}
+                      alt={msg.user}
+                      width={50}
+                      height={50}
+                      className="rounded-full border-2 border-indigo-500 object-cover"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold truncate">{msg.user}</p>
                       <p className="text-gray-400 text-sm truncate">
@@ -267,16 +328,14 @@ export default function MessagesLayout() {
           </div>
         </div>
 
-        {/* ========================================================== */}
-        {/* CHAT VIEW (Right Panel) */}
-        {/* ========================================================== */}
+        {/* Chat View */}
         {selectedId ? (
-          // Show the ChatView if an ID is selected
-          <div className={`h-full ${selectedId ? "w-full md:w-2/3" : "hidden"}`}>
+          <div
+            className={`h-full ${selectedId ? "w-full md:w-2/3" : "hidden"}`}
+          >
             <ChatView userId={selectedId} />
           </div>
         ) : (
-          // Show a placeholder on desktop when no chat is selected
           <div className="hidden md:flex flex-1 items-center justify-center text-gray-500 text-xl bg-neutral-900">
             Select a message to start chatting
           </div>

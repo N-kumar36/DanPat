@@ -1,6 +1,6 @@
 "use client";
-import Stories from "../components/Stories";
-import PostsFeed from "../components/PostsFeed";
+import Stories from "../components/ui/Stories";
+import PostsFeed from "../components/ui/PostsFeed";
 import Image from "next/image";
 
 export default function Home() {
